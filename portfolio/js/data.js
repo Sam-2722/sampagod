@@ -96,7 +96,7 @@ const PROJECTS=[
     name:"Portfolio Website Wireframe",
     category:"Web Design",
     type:"Website Wireframe",
-    year:"2024",
+    year:"2023",
     status:"Completed",
     role:"Designer",
     images:["assets/portfolio-website-wireframe-landscape.jpeg"],
