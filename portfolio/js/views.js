@@ -11,7 +11,7 @@ const card=p=>`<article class="card proj">${thumb(p)}<div class="body"><span cla
 /* Home page */
 const ini=P.name.split(" ").map(w=>w[0]).join("").slice(0,2);
 const page=(t,h)=>`<section><h2>${t}</h2>${h}</section>`;
-const facts=[["Full name",P.name],["Title",P.title],["Location",P.location],["Email",`<a href="mailto:${P.email}">${P.email}</a>`],["Phone",`<a href="tel:${P.phone}">${P.phone}</a>`],["Education",P.education],["Focus",P.focus]];
+const facts=[["Full name",P.name],["Title",P.title],["Age",P.age],["Birthdate",P.birthdate],["Location",P.location],["Email",`<a href="mailto:${P.email}">${P.email}</a>`],["Phone",`<a href="tel:${P.phone}">${P.phone}</a>`],["Education",P.education],["Focus",P.focus]];
 const cats=PROJECT_TYPES;
 
 /* Each tab (page) of the site */
