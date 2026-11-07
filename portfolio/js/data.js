@@ -5,6 +5,8 @@ const P={
   tagline:"I create animations and useful websites.",
   intro:"I build websites and create game animations, visual effects and UI designs.",
   bio:"I'm an IT student with experience in game development and animation. I create websites, game animations and effects, and UI designs. My goal is to keep growing as an animator and developer.",
+  age:"20",
+  birthdate:"May 27, 2006",
   location:"Calamba, Philippines",
   email:"briansamonte27@gmail.com",
   phone:"09207988170",
@@ -14,7 +16,7 @@ const P={
   focus:"Web development, game development, animation and UI design",
   cv:"assets/Brian-Samonte-CV.pdf",
   securityCertificate:"assets/Brian-Samonte-Security-Awareness-Certificate.pdf",
-  photo:"assets/brian-samonte-photo.jpg",
+  photo:"assets/brian-samonte-photo.png",
   formEndpoint:"https://formspree.io/f/maeebqeq"
 };
 const SKILLS={
