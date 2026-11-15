@@ -2,11 +2,11 @@
 /* Header and footer */
 const nav=[["Home","home"],["About","about"],["Skills","skills"],["Experience","experience"],["Projects","projects"],["Education","education"],["CV","cv"],["Contact","contact"]];
 const canonical=document.querySelector('link[rel="canonical"]');
-if(canonical)canonical.href=new URL("./",location.href).href;
+$("#brand").href=pageUrl("home");
 $("#brand").innerHTML=`<img src="assets/skull-rose-icon-dark.png" alt=""><span>${P.name}</span>`;
-$("#menu").innerHTML=nav.map(n=>`<a href="#${n[1]}">${n[0]}</a>`).join("");
+$("#menu").innerHTML=nav.map(n=>`<a href="${pageUrl(n[1])}">${n[0]}</a>`).join("");
 const profileLinks=[["LinkedIn",P.linkedin],["GitHub",P.github],["Facebook",P.facebook],["Instagram",P.instagram]].filter(([,url])=>url);
-$("#footer").innerHTML=`<div><p><strong>${P.name}</strong></p><p>${P.title}</p><p><a href="mailto:${P.email}">${P.email}</a></p><p class="social-links">${profileLinks.map(([label,url])=>`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`).join(" ")}</p><p>&copy; ${new Date().getFullYear()} ${P.name}. All rights reserved.</p></div><nav aria-label="Footer" class="flinks">${nav.map(n=>`<a href="#${n[1]}">${n[0]}</a>`).join("")}</nav>`;
+$("#footer").innerHTML=`<div><p><strong>${P.name}</strong></p><p>${P.title}</p><p><a href="mailto:${P.email}">${P.email}</a></p><p class="social-links">${profileLinks.map(([label,url])=>`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`).join(" ")}</p><p>&copy; ${new Date().getFullYear()} ${P.name}. All rights reserved.</p></div><nav aria-label="Footer" class="flinks">${nav.map(n=>`<a href="${pageUrl(n[1])}">${n[0]}</a>`).join("")}</nav>`;
 
 /* Mobile menu */
 const burger=$("#burger"),menu=$("#menu");
@@ -50,15 +50,15 @@ function bindSearch(){
 }
 const AFTER={contact:bindForm,projects:bindSearch};
 
-/* Project detail page (opens in a new browser tab) */
+/* Project detail page */
 const pv=$("#page-view"),hv=$("#home-view"),base=document.title;
 function detailView(id){
   const p=PROJECTS.find(x=>x.id===id);
-  if(!p){pv.innerHTML=`<section><h2>Project not found</h2><a class="btn" href="#projects">See all projects</a></section>`;return}
+  if(!p){pv.innerHTML=`<section><h2>Project not found</h2><a class="btn" href="${pageUrl("projects")}">See all projects</a></section>`;return}
   document.title=p.name+" | "+P.name;
   const images=p.images?.length?p.images:p.image?[p.image]:[];
   const details=[["Category",p.category],["Project type",p.type],["Technologies / tools",p.tools||p.tech],["Creator's role",p.role],["Project date",p.date||p.year],["Status",p.status]].filter(([,v])=>v);
-  pv.innerHTML=`<section class="detail"><header class="detail-heading"><p class="detail-kicker">Project · ${p.type||p.category}</p><h2>${p.name}</h2><p class="detail-lead">${p.desc||""}</p><p><a href="#projects">← Back to project albums</a></p></header>
+  pv.innerHTML=`<section class="detail"><header class="detail-heading"><p class="detail-kicker">Project · ${p.type||p.category}</p><h2>${p.name}</h2><p class="detail-lead">${p.desc||""}</p><p><a href="${pageUrl("projects")}">← Back to project albums</a></p></header>
   <div class="detail-layout"><div class="detail-content">
   ${p.overview||p.desc?`<section class="detail-block"><h3>Project Overview</h3><p>${p.overview||p.desc}</p></section>`:""}
   ${p.team?.length?`<section class="detail-block"><h3>Project Team</h3><ul>${p.team.map(member=>`<li>${member}</li>`).join("")}</ul></section>`:""}
@@ -69,18 +69,46 @@ function detailView(id){
   ${p.features?.length?`<section class="detail-block"><h3>Features</h3><ul>${p.features.map(f=>`<li>${f}</li>`).join("")}</ul></section>`:""}
   ${p.problem?`<section class="detail-block"><h3>Problem</h3><p>${p.problem}</p></section>`:""}${p.solution?`<section class="detail-block"><h3>Solution</h3><p>${p.solution}</p></section>`:""}
   ${p.tech?.length?`<section class="detail-block"><h3>Technologies used</h3><p class="chips">${list(p.tech)}</p></section>`:""}
-  </div><aside class="detail-sidebar"><h3>Project Details</h3><dl>${details.map(([label,value])=>`<div><dt>${label}</dt><dd>${Array.isArray(value)?value.join(", "):value}</dd></div>`).join("")}</dl>${images.length?`<a href="#project-album">View project album ↗</a>`:""}${p.url?ext(p.url,"Open Project","ghost"):""}${p.github?ext(p.github,"GitHub repository","ghost"):p.githubPending?`<p><button class="btn sm ghost" type="button" disabled>GitHub link coming soon</button></p>`:""}</aside></div></section>`;
+  </div><aside class="detail-sidebar"><h3>Project Details</h3><dl>${details.map(([label,value])=>`<div><dt>${label}</dt><dd>${Array.isArray(value)?value.join(", "):value}</dd></div>`).join("")}</dl>${images.length?`<a href="${projectUrl(p.id)}#project-album">View project album ↗</a>`:""}${p.url?ext(p.url,"Open Project","ghost"):""}${p.github?ext(p.github,"GitHub repository","ghost"):p.githubPending?`<p><button class="btn sm ghost" type="button" disabled>GitHub link coming soon</button></p>`:""}</aside></div></section>`;
 }
-/* Simple router: each menu item is its own tab */
+/* Route clean paths while continuing to support links shared with the old hash router. */
 function route(){
-  let h=location.hash.slice(1)||"home";
+  let path=location.pathname;
+  if(appBase&&path.startsWith(appBase))path=path.slice(appBase.length)||"/";
+  if(path==="/index.html")path="/";
+  path=path.replace(/\/+$/,"")||"/";
+  let h=path==="/"?location.hash.slice(1)||"home":path.slice(1);
+  let projectId="";
+  if(h.startsWith("projects/"))projectId=h.slice("projects/".length);
+  else if(h.startsWith("p-"))projectId=h.slice(2);
   if(h==="all-projects")h="projects";
   let cur="home";
-  if(h.startsWith("p-")){hv.hidden=true;pv.hidden=false;detailView(h.slice(2));cur="projects"}
+  if(projectId){hv.hidden=true;pv.hidden=false;detailView(projectId);cur="projects"}
   else if(h==="experience"){hv.hidden=false;pv.hidden=true;document.title=base;cur="experience";scrollTo(0,0);requestAnimationFrame(()=>$("#experience-home").scrollIntoView())}
   else if(V[h]){hv.hidden=true;pv.hidden=false;pv.innerHTML=V[h]();if(AFTER[h])AFTER[h]();cur=h;document.title=nav.find(n=>n[1]===h)[0]+" | "+P.name}
-  else{hv.hidden=false;pv.hidden=true;document.title=base}
-  document.querySelectorAll("#menu a").forEach(a=>a.getAttribute("href")==="#"+cur?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
-  if(h!=="experience")scrollTo(0,0);
+  else if(h==="home"){hv.hidden=false;pv.hidden=true;document.title=base}
+  else{hv.hidden=true;pv.hidden=false;pv.innerHTML=`<section><h2>Page not found</h2><a class="btn" href="${pageUrl("home")}">Go home</a></section>`;document.title="Page not found | "+P.name}
+  if(canonical)canonical.href=new URL(pageUrl(projectId?`projects/${projectId}`:cur),location.origin).href;
+  document.querySelectorAll("#menu a").forEach(a=>a.href===new URL(pageUrl(cur),location.origin).href?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  if(location.hash&&!location.hash.startsWith("#p-"))requestAnimationFrame(()=>document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView());
+  else if(h!=="experience")scrollTo(0,0);
 }
-addEventListener("hashchange",route);route();
+document.addEventListener("click",event=>{
+  const link=event.target.closest("a[href]");
+  if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||link.target||link.hasAttribute("download"))return;
+  const destination=new URL(link.href,location.href);
+  const routePath=appBase&&destination.pathname.startsWith(appBase)
+    ?destination.pathname.slice(appBase.length)||"/"
+    :destination.pathname;
+  const routeMatch=destination.origin===location.origin&&(
+    routePath==="/"||
+    /^\/(about|skills|experience|projects|education|cv|contact)$/.test(routePath)||
+    /^\/projects\/[^/]+$/.test(routePath)
+  );
+  if(!routeMatch||destination.pathname===location.pathname&&destination.hash)return;
+  event.preventDefault();
+  history.pushState({}, "", destination.pathname+destination.search+destination.hash);
+  route();
+});
+addEventListener("popstate",route);
+route();
