@@ -32,11 +32,11 @@ p{margin:0 0 1em}
 .role{display:inline-flex;align-items:center;gap:8px;padding:6px 15px;border:1px solid var(--line);border-radius:99px;background:var(--card);font-size:.9rem;font-weight:600;margin-bottom:22px}
 .role::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .lead{font-size:1.3rem;color:var(--muted);font-weight:500;line-height:1.5}
-.photo{width:270px;height:270px;margin:auto;border-radius:36px;overflow:hidden;outline:1px solid var(--line);outline-offset:12px;background:linear-gradient(145deg,var(--accent),#163832);display:grid;place-items:center;font-size:4.5rem;font-weight:800;color:#fff}
+.photo{width:400px;height:400px;margin:auto;border-radius:36px;overflow:hidden;outline:1px solid var(--line);outline-offset:12px;background:linear-gradient(145deg,var(--accent),#163832);display:grid;place-items:center;font-size:4.5rem;font-weight:800;color:#fff}
 .photo img{width:100%;height:100%;object-fit:cover}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}}
 .hero-in>*{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}.hero-in>:nth-child(2){animation-delay:.15s}
-@media(max-width:760px){.hero{padding-top:48px}.hero-in{grid-template-columns:1fr;gap:36px}.photo{order:-1;width:170px;height:170px;font-size:3rem;border-radius:28px}}
+@media(max-width:760px){.hero{padding-top:48px}.hero-in{grid-template-columns:1fr;gap:36px}.photo{order:-1;width:250px;height:250px;font-size:3rem;border-radius:28px}}
 .home-skills{padding-top:40px}
 .home-skill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .home-skill-card{border-top:4px solid var(--accent)}
