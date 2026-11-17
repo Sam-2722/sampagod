@@ -1,6 +1,6 @@
 /* ===== EDIT YOUR DETAILS HERE ===== */
 const P={
-  name:"Brian Samonte",
+  name:"Brian S Samonte",
   title:"IT Student | Game Developer & Animator",
   tagline:"I design digital experiences that blend code, creativity, and storytelling.",
   intro:"I build websites, game animations, visual effects, and UI designs that help ideas feel polished, interactive, and memorable.",
